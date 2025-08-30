@@ -18,6 +18,8 @@
 using CleanArchitecture.Presentation.App_Start;
 
 using WebActivatorEx;
+using Microsoft.AspNetCore.Mvc;
+
 
 [assembly: PreApplicationStartMethod(typeof(StructuremapMvc), "Start")]
 [assembly: ApplicationShutdownMethod(typeof(StructuremapMvc), "End")]

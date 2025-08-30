@@ -35,8 +35,8 @@ namespace CleanArchitecture.Specification.Products
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Products", "Get Products List", "\tAs a sales person\r\n\tI want to get a list of products\r\n\tSo I can inspect the prod" +
-                    "ucts", ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Products", "Get Products List", "\tAs a sales person\n\tI want to get a list of products\n\tSo I can inspect the produc" +
+                    "ts", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         

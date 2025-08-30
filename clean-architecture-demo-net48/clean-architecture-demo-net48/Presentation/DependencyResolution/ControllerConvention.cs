@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ControllerConvention.cs" company="Web Advanced">
 // Copyright 2012 Web Advanced (www.webadvanced.com)
@@ -16,15 +18,15 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace CleanArchitecture.Presentation.DependencyResolution {
-    using System;
-    using System.Linq;
-    using System.Web.Mvc;
-    using StructureMap;
-    using StructureMap.Configuration.DSL;
-    using StructureMap.Graph;
-    using StructureMap.Graph.Scanning;
-    using StructureMap.Pipeline;
-    using StructureMap.TypeRules;
+using System;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using StructureMap;
+using StructureMap.Configuration.DSL;
+using StructureMap.Graph;
+using StructureMap.Graph.Scanning;
+using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
     public class ControllerConvention : IRegistrationConvention {
         #region Public Methods and Operators
@@ -32,9 +34,10 @@ namespace CleanArchitecture.Presentation.DependencyResolution {
         public void ScanTypes(TypeSet types, Registry registry)
         {
             foreach (var type in types.AllTypes()
-                .Where(type => type.CanBeCastTo<Controller>() 
+                .Where(type => type.CanBeCastTo<Controller>()
                     && !type.IsAbstract))
             {
+                // In ASP.NET Core, controllers are typically scoped to the request
                 registry.For(type).LifecycleIs(new UniquePerRequestLifecycle());
             }
         }

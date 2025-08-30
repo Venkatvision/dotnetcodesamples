@@ -1,19 +1,23 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Http;
-using System.Web.Mvc;
-using System.Web.Routing;
 using WebApi.StructureMap;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using Microsoft.AspNetCore.Mvc;
+
+using Microsoft.AspNetCore.Routing;
+
+using Microsoft.AspNetCore.Http;
+
+using System.Threading.Tasks;
+
 
 namespace CleanArchitecture.Service
 {
-    public class Global : HttpApplication
-    {
-        void Application_Start(object sender, EventArgs e)
+    public class Global     {
+RequestDelegate _next = null;        void Application_Start(object sender, EventArgs e)
         {
             // Code that runs on application startup
             AreaRegistration.RegisterAllAreas();
@@ -31,5 +35,5 @@ namespace CleanArchitecture.Service
                             filter => filter.FullName.StartsWith("CleanArchitecture"));                        
                 }));
         }
-    }
+publicGlobal(RequestDelegatenext){}    }
 }

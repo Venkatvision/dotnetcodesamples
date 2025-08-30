@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -8,6 +8,8 @@ using CleanArchitecture.Application.Sales.Queries.GetSaleDetail;
 using CleanArchitecture.Application.Sales.Queries.GetSalesList;
 using Moq;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
+
 
 namespace CleanArchitecture.Service.Sales
 {

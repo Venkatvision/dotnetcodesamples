@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -10,6 +10,8 @@ using CleanArchitecture.Domain.Employees;
 using CleanArchitecture.Domain.Products;
 using CleanArchitecture.Domain.Sales;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
+
 
 namespace CleanArchitecture.Application.Sales.Queries.GetSaleDetail
 {

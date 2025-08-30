@@ -35,8 +35,8 @@ namespace CleanArchitecture.Specification.Employees.GetEmployeesList
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Employees/GetEmployeesList", "Get Employees List", "\tAs a sales person\r\n\tI want to get a list of employees\r\n\tSo I can inspect the emp" +
-                    "loyees", ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Employees/GetEmployeesList", "Get Employees List", "\tAs a sales person\n\tI want to get a list of employees\n\tSo I can inspect the emplo" +
+                    "yees", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         

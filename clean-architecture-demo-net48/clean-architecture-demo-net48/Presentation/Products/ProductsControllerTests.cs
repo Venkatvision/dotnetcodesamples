@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Moq.AutoMock;
 using CleanArchitecture.Application.Products.Queries.GetProductsList;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
+
 
 namespace CleanArchitecture.Presentation.Products
 {

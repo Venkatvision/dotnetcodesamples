@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Moq.AutoMock;
 using CleanArchitecture.Application.Products.Queries.GetProductsList;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
+
 
 namespace CleanArchitecture.Service.Products
 {

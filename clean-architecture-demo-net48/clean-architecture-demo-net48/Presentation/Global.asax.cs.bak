@@ -1,0 +1,25 @@
+using System;
+using Microsoft.AspNetCore.Mvc;
+
+using Microsoft.AspNetCore.Routing;
+
+using Microsoft.AspNetCore.Http;
+
+using System.Threading.Tasks;
+
+
+namespace CleanArchitecture.Presentation
+{
+    public class MvcApplication     {
+RequestDelegate _next = null;        protected void Application_Start()
+        {
+            ViewEngines.Engines.Clear();
+
+            ViewEngines.Engines.Add(new CustomRazorViewEngine());
+
+            AreaRegistration.RegisterAllAreas();
+
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+        }
+publicMvcApplication(RequestDelegatenext){}    }
+}

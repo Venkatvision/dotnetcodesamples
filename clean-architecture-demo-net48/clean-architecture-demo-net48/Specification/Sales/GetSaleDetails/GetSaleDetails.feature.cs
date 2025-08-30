@@ -35,8 +35,8 @@ namespace CleanArchitecture.Specification.Sales.GetSaleDetails
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Sales/GetSaleDetails", "Get Sale Details", "\tAs a sales person\r\n\tI want to get the details of a sale\r\n\tSo that I can review t" +
-                    "he sale", ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Sales/GetSaleDetails", "Get Sale Details", "\tAs a sales person\n\tI want to get the details of a sale\n\tSo that I can review the" +
+                    " sale", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         
