@@ -1,0 +1,95 @@
+@page
+@model EMS_UI.Pages.AddEmployeeModel
+@{
+    ViewData["Title"] = "Add Employee";
+}
+
+<h2>Add Employee</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<form method="post">
+    @Html.AntiForgeryToken()
+    
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input name="name" class="form-control" required />
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input name="email" type="email" class="form-control" required />
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Gender</label>
+        <select name="gender" class="form-control" required>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Department</label>
+        <select name="departmentNo" class="form-control" required>
+            <option value="">Select Department</option>
+            @foreach (var dept in Model.Departments)
+            {
+                <option value="@dept.DepartmentId">@dept.Name</option>
+            }
+        </select>
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Date of Birth</label>
+        <input name="dateOfBirth" type="date" class="form-control" required />
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Date of Joining</label>
+        <input name="dateOfJoining" type="date" class="form-control" required />
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Manager</label>
+        <select name="reportingTo" class="form-control">
+            @foreach (var mgr in Model.Managers)
+            {
+                <option value="@mgr.Number">@mgr.Name</option>
+            }
+        </select>
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Phone</label>
+        <input name="phone" type="number" class="form-control" required />
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Salary</label>
+        <input name="salary" type="number" class="form-control" required />
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Commission</label>
+        <input name="commission" type="number" class="form-control" value="0" />
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Job Title</label>
+        <select name="jobTitle" class="form-control" required>
+            <option value="">Select Job Title</option>
+            <option value="Developer">Developer</option>
+            <option value="Manager">Manager</option>
+            <option value="Analyst">Analyst</option>
+            <option value="Tester">Tester</option>
+        </select>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a href="/" class="btn btn-secondary">Cancel</a>
+</form>

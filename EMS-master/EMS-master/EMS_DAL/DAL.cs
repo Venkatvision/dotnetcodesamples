@@ -1,139 +1,72 @@
 using EMS_DAL.Models;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
-
 
 namespace EMS_DAL
 {
     public static class DAL
     {
-        static string connString =
-            ConfigurationManager.ConnectionStrings["SqlConnString"].ToString();
+        // In-memory data storage
+        private static List<Employee> _employees = new List<Employee>
+        {
+            new Employee { Number = 1, Name = "John Doe", Email = "john@test.com", Gender = "Male", 
+                          DepartmentNo = 1, DateOfBirth = DateTime.Parse("1990-01-01"), 
+                          DateOfJoining = DateTime.Parse("2020-01-01"), ReportingTo = null, 
+                          Phone = 1234567890, Salary = 50000, Commission = 5000, JobTitle = "Developer" },
+            new Employee { Number = 2, Name = "Jane Smith", Email = "jane@test.com", Gender = "Female", 
+                          DepartmentNo = 2, DateOfBirth = DateTime.Parse("1985-05-15"), 
+                          DateOfJoining = DateTime.Parse("2018-03-01"), ReportingTo = null, 
+                          Phone = 9876543210, Salary = 60000, Commission = 0, JobTitle = "Manager" }
+        };
+
+        private static List<Department> _departments = new List<Department>
+        {
+            new Department { DepartmentId = 1, Name = "IT" },
+            new Department { DepartmentId = 2, Name = "HR" },
+            new Department { DepartmentId = 3, Name = "Finance" },
+            new Department { DepartmentId = 4, Name = "Sales" },
+            new Department { DepartmentId = 5, Name = "Marketing" }
+        };
+
+        private static List<User> _users = new List<User>
+        {
+            new User { Username = "admin", Password = "admin" },
+            new User { Username = "test", Password = "test" }
+        };
+
+        private static int _nextEmployeeId = 3;
 
         public static bool AddEmployee(Employee employee)
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connString))
-                {
-                    var query = $"INSERT INTO Employees(Name,Salary,Commission,DateOfJoining," +
-                        $"DateOfBirth,DepartmentNo,JobTitle,ReportingTo,Email,Phone,Gender) " +
-                        $"VALUES('{ employee.Name}',{ employee.Salary},{ employee.Commission}, " +
-                        $"'{employee.DateOfJoining.ToString("yyyy-MM-dd")}','{employee.DateOfBirth.ToString("yyyy-MM-dd")}'," +
-                        $"{ employee.DepartmentNo},'{ employee.JobTitle}'," +
-                        $" { employee.ReportingTo}, '{ employee.Email}', { employee.Phone}," +
-                        $" '{ employee.Gender}')";
-
-                    SqlCommand command = new SqlCommand(query, connection);
-                    connection.Open();
-                    int result = command.ExecuteNonQuery();
-
-                    if (result == 1) //success insert
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false; //insert failed
-                    }
-                }
+                employee.Number = _nextEmployeeId++;
+                _employees.Add(employee);
+                return true;
             }
-            catch (Exception ex)
+            catch
             {
-                //log
                 return false;
             }
         }
 
         public static bool Login(string username, string password)
         {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connString))
-                {
-                    var query = $"select username from Users where" +
-                        $" username='{username}' and password = '{password}'";
-                    SqlCommand command = new SqlCommand(query, connection);
-                    DataSet ds = new DataSet();
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    adapter.Fill(ds);
-
-                    if (ds.Tables[0].Rows.Count > 0)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return _users.Any(u => u.Username == username && u.Password == password);
         }
 
         public static bool RegisterUser(string username, string password)
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connString))
-                {
-                    var query = $"INSERT INTO Users(Username,Password) " +
-                        $"VALUES('{ username}','{password}')";
-
-                    SqlCommand command = new SqlCommand(query, connection);
-                    connection.Open();
-                    int result = command.ExecuteNonQuery();
-
-                    if (result == 1) //success insert
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false; //insert failed
-                    }
-                }
+                if (_users.Any(u => u.Username == username)) return false;
+                _users.Add(new User { Username = username, Password = password });
+                return true;
             }
-            catch (Exception ex)
+            catch
             {
-                //log
                 return false;
-            }
-        }
-
-        public static DataSet GetEmployeesByDept(int deptId)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connString))
-                {
-                    string query = "select e.Number, e.Name, e.Salary, e.Commission," +
-                        " e.DateOfBirth, e.DateOfJoining, d.Name as [Dept Name], " +
-                        "e.JobTitle, ISNULL(m.Name, 'No Manager') as [Manager], " +
-                        "e.Email, e.Phone, e.Gender from Employees e " +
-                        "left join Employees m on e.ReportingTo = m.Number " +
-                        "join Departments d on e.DepartmentNo = d.DepartmentID " +
-                        $"where e.DepartmentNo = {deptId}";
-
-                    SqlCommand command = new SqlCommand(query, connection);
-                    DataSet ds = new DataSet();
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    adapter.Fill(ds);
-                    return ds;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
             }
         }
 
@@ -141,75 +74,17 @@ namespace EMS_DAL
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connString))
+                var emp = _employees.FirstOrDefault(e => e.Number == empId);
+                if (emp != null)
                 {
-                    var query = $"delete Employees where Number = {empId}";
-
-                    SqlCommand command = new SqlCommand(query, connection);
-                    connection.Open();
-                    int result = command.ExecuteNonQuery();
-
-                    if (result == 1) //success delete
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false; //delete failed
-                    }
+                    _employees.Remove(emp);
+                    return true;
                 }
-            }
-            catch (Exception ex)
-            {
-                //log
                 return false;
             }
-        }
-
-        public static DataSet GetEmployeeById(int empId)
-        {
-            try
+            catch
             {
-                using (SqlConnection connection = new SqlConnection(connString))
-                {
-                    SqlCommand command =
-                        new SqlCommand($"select * from Employees where Number = {empId}",
-                        connection);
-                    DataSet ds = new DataSet();
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    adapter.Fill(ds);
-                    return ds;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-
-        public static DataSet GetEmployeeList()
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connString))
-                {
-                    string query = "select e.Number, e.Name, e.Salary, e.Commission," +
-                        " e.DateOfBirth, e.DateOfJoining, d.Name as [Dept Name], " +
-                        "e.JobTitle, ISNULL(m.Name, 'No Manager') as [Manager], " +
-                        "e.Email, e.Phone, e.Gender from Employees e " +
-                        "left join Employees m on e.ReportingTo = m.Number " +
-                        "join Departments d on e.DepartmentNo = d.DepartmentID";
-                    SqlCommand command =
-                        new SqlCommand(query, connection);
-                    DataSet ds = new DataSet();
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    adapter.Fill(ds);
-                    return ds;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
+                return false;
             }
         }
 
@@ -217,80 +92,81 @@ namespace EMS_DAL
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connString))
+                var existing = _employees.FirstOrDefault(e => e.Number == employee.Number);
+                if (existing != null)
                 {
-                    var query = $"UPDATE Employees set Name = '{ employee.Name}', " +
-                        $"Salary = { employee.Salary }, " +
-                        $"Commission = { employee.Commission }, " +
-                        $"DateOfJoining = '{employee.DateOfJoining.ToString("yyyy-MM-dd")}', " +
-                        $"DateOfBirth = '{employee.DateOfBirth.ToString("yyyy-MM-dd")}', " +
-                        $"DepartmentNo = { employee.DepartmentNo }, " +
-                        $"JobTitle = '{ employee.JobTitle}', " +
-                        $"ReportingTo = {employee.ReportingTo}, " +
-                        $"Email = '{ employee.Email}', Phone = { employee.Phone }, " +
-                        $"Gender = '{ employee.Gender}' where Number = { employee.Number }";
-
-                    SqlCommand command = new SqlCommand(query, connection);
-                    connection.Open();
-                    int result = command.ExecuteNonQuery();
-
-                    if (result == 1) //success insert
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false; //insert failed
-                    }
+                    existing.Name = employee.Name;
+                    existing.Email = employee.Email;
+                    existing.Gender = employee.Gender;
+                    existing.DepartmentNo = employee.DepartmentNo;
+                    existing.DateOfBirth = employee.DateOfBirth;
+                    existing.DateOfJoining = employee.DateOfJoining;
+                    existing.ReportingTo = employee.ReportingTo;
+                    existing.Phone = employee.Phone;
+                    existing.Salary = employee.Salary;
+                    existing.Commission = employee.Commission;
+                    existing.JobTitle = employee.JobTitle;
+                    return true;
                 }
+                return false;
             }
-            catch (Exception ex)
+            catch
             {
-                //log
                 return false;
             }
         }
 
-        public static DataSet GetDepartments()
+        public static List<Employee> GetEmployees()
         {
-            try
+            return _employees.Select(e => new Employee
             {
-                using (SqlConnection connection = new SqlConnection(connString))
-                {
-                    SqlCommand command =
-                        new SqlCommand("select DepartmentId, Name from Departments",
-                        connection);
-                    DataSet ds = new DataSet();
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    adapter.Fill(ds);
-                    return ds;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+                Number = e.Number,
+                Name = e.Name,
+                Email = e.Email,
+                Gender = e.Gender,
+                Department = _departments.FirstOrDefault(d => d.DepartmentId == e.DepartmentNo)?.Name ?? "Unknown",
+                DateOfBirth = e.DateOfBirth,
+                DateOfJoining = e.DateOfJoining,
+                Phone = e.Phone,
+                Salary = e.Salary,
+                Commission = e.Commission,
+                JobTitle = e.JobTitle
+            }).ToList();
         }
 
-        public static DataSet GetEmployeeIdAndName()
+        public static Employee GetEmployee(int empId)
         {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connString))
-                {
-                    SqlCommand command =
-                        new SqlCommand("select Number, Name from Employees",
-                        connection);
-                    DataSet ds = new DataSet();
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    adapter.Fill(ds);
-                    return ds;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return _employees.FirstOrDefault(e => e.Number == empId);
         }
+
+        public static List<Department> GetDepartmentList()
+        {
+            return _departments.ToList();
+        }
+
+        public static List<Employee> GetEmployeeNames()
+        {
+            var result = new List<Employee> { new Employee { Number = 0, Name = "No Manager" } };
+            result.AddRange(_employees.Select(e => new Employee { Number = e.Number, Name = e.Name }));
+            return result;
+        }
+
+        public static List<Employee> GetEmployeesByDept(int deptId)
+        {
+            return _employees.Where(e => e.DepartmentNo == deptId).Select(e => new Employee
+            {
+                Number = e.Number,
+                Name = e.Name,
+                Department = _departments.FirstOrDefault(d => d.DepartmentId == e.DepartmentNo)?.Name ?? "Unknown",
+                Salary = e.Salary,
+                JobTitle = e.JobTitle
+            }).ToList();
+        }
+    }
+
+    public class User
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

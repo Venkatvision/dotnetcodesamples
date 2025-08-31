@@ -15,10 +15,11 @@ namespace EMS_DAL.Models
         public string Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime DateOfJoining { get; set; }
-        public int ReportingTo { get; set; }
+        public int? ReportingTo { get; set; }
         public long Phone { get; set; }
         public int Salary { get; set; }
         public int Commission { get; set; }
         public string JobTitle { get; set; }
+        public string Department { get; set; } = string.Empty;
     }
 }

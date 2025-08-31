@@ -1,0 +1,93 @@
+@page
+@model EMS_UI.Pages.EditEmployeeModel
+@{
+    ViewData["Title"] = "Edit Employee";
+}
+
+<h2>Edit Employee</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<form method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="number" value="@Model.Employee.Number" />
+    
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input name="name" class="form-control" value="@Model.Employee.Name" required />
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input name="email" type="email" class="form-control" value="@Model.Employee.Email" required />
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Gender</label>
+        <select name="gender" class="form-control" required>
+            <option value="Male" selected="@(Model.Employee.Gender == "Male")">Male</option>
+            <option value="Female" selected="@(Model.Employee.Gender == "Female")">Female</option>
+        </select>
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Department</label>
+        <select name="departmentNo" class="form-control" required>
+            @foreach (var dept in Model.Departments)
+            {
+                <option value="@dept.DepartmentId" selected="@(dept.DepartmentId == Model.Employee.DepartmentNo)">@dept.Name</option>
+            }
+        </select>
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Date of Birth</label>
+        <input name="dateOfBirth" type="date" class="form-control" value="@Model.Employee.DateOfBirth.ToString("yyyy-MM-dd")" required />
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Date of Joining</label>
+        <input name="dateOfJoining" type="date" class="form-control" value="@Model.Employee.DateOfJoining.ToString("yyyy-MM-dd")" required />
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Manager</label>
+        <select name="reportingTo" class="form-control">
+            @foreach (var mgr in Model.Managers)
+            {
+                <option value="@mgr.Number" selected="@(mgr.Number == (Model.Employee.ReportingTo ?? 0))">@mgr.Name</option>
+            }
+        </select>
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Phone</label>
+        <input name="phone" type="number" class="form-control" value="@Model.Employee.Phone" required />
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Salary</label>
+        <input name="salary" type="number" class="form-control" value="@Model.Employee.Salary" required />
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Commission</label>
+        <input name="commission" type="number" class="form-control" value="@Model.Employee.Commission" />
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Job Title</label>
+        <select name="jobTitle" class="form-control" required>
+            <option value="Developer" selected="@(Model.Employee.JobTitle == "Developer")">Developer</option>
+            <option value="Manager" selected="@(Model.Employee.JobTitle == "Manager")">Manager</option>
+            <option value="Analyst" selected="@(Model.Employee.JobTitle == "Analyst")">Analyst</option>
+            <option value="Tester" selected="@(Model.Employee.JobTitle == "Tester")">Tester</option>
+        </select>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a href="/EmployeeList" class="btn btn-secondary">Cancel</a>
+</form>

@@ -1,0 +1,51 @@
+@page
+@model EMS_UI.Pages.EmployeesByDeptModel
+@{
+    ViewData["Title"] = "Employees by Department";
+}
+
+<h2>Employees by Department</h2>
+
+<form method="get">
+    <div class="mb-3">
+        <label class="form-label">Select Department</label>
+        <select name="deptId" class="form-control" onchange="this.form.submit()">
+            <option value="">Choose Department</option>
+            @foreach (var dept in Model.Departments)
+            {
+                <option value="@dept.DepartmentId" selected="@(dept.DepartmentId == Model.SelectedDeptId)">@dept.Name</option>
+            }
+        </select>
+    </div>
+</form>
+
+@if (Model.Employees?.Any() == true)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Salary</th>
+                <th>Job Title</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in Model.Employees)
+            {
+                <tr>
+                    <td>@emp.Number</td>
+                    <td>@emp.Name</td>
+                    <td>@emp.Department</td>
+                    <td>@emp.Salary</td>
+                    <td>@emp.JobTitle</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (Model.SelectedDeptId > 0)
+{
+    <p>No employees found in selected department</p>
+}
