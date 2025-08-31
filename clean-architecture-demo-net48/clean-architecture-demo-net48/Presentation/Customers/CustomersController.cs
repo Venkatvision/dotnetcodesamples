@@ -1,6 +1,7 @@
-﻿using System;
-using System.Web.Mvc;
+using System;
 using CleanArchitecture.Application.Customers.Queries.GetCustomerList;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace CleanArchitecture.Presentation.Customers
 {

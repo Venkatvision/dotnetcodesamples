@@ -1,9 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
 using Moq.AutoMock;
 using NUnit.Framework;
+using Microsoft.AspNetCore.Mvc;
+
+using NUnit.Framework.Legacy;
+
 
 namespace CleanArchitecture.Presentation.Home
 {

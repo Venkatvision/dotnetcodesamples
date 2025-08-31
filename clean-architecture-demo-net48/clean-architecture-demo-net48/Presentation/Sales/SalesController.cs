@@ -1,15 +1,16 @@
-﻿using System;
+using System;
 using System.Linq;
-using System.Web.Mvc;
 using CleanArchitecture.Application.Sales.Commands.CreateSale;
 using CleanArchitecture.Application.Sales.Queries.GetSaleDetail;
 using CleanArchitecture.Application.Sales.Queries.GetSalesList;
 using CleanArchitecture.Presentation.Sales.Models;
 using CleanArchitecture.Presentation.Sales.Services;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace CleanArchitecture.Presentation.Sales
 {
-    [RoutePrefix("sales")]
+    [Route("sales")]
     public class SalesController : Controller
     {
         private readonly IGetSalesListQuery _salesListQuery;
@@ -55,9 +56,9 @@ namespace CleanArchitecture.Presentation.Sales
 
         [Route("create")]
         [HttpPost]
-        public RedirectToRouteResult Create(CreateSaleViewModel viewModel)
+        public IActionResult Create(CreateSaleViewModel viewModel)
         {
-            var model = viewModel.Sale;            
+            var model = viewModel.Sale;
 
             _createCommand.Execute(model);
 

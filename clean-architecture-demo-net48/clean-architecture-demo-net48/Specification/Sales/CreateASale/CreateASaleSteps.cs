@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using CleanArchitecture.Application.Interfaces;
 using CleanArchitecture.Application.Sales.Commands.CreateSale;
@@ -9,6 +9,8 @@ using NUnit.Framework;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 using AppContext = CleanArchitecture.Specification.Common.AppContext;
+using NUnit.Framework.Legacy;
+
 
 namespace CleanArchitecture.Specification.Sales.CreateASale
 {

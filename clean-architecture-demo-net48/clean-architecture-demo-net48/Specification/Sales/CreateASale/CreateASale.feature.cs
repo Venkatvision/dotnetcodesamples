@@ -35,7 +35,7 @@ namespace CleanArchitecture.Specification.Sales.CreateASale
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Sales/CreateASale", "Create a Sale", "\tAs a sales person\r\n\tI want to create a sale\r\n\tTo record a sales transaction", ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Sales/CreateASale", "Create a Sale", "\tAs a sales person\n\tI want to create a sale\n\tTo record a sales transaction", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         

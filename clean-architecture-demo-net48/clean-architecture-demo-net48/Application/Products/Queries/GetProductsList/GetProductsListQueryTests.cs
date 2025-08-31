@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -7,6 +7,8 @@ using CleanArchitecture.Application.Interfaces;
 using CleanArchitecture.Common.Mocks;
 using CleanArchitecture.Domain.Products;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
+
 
 namespace CleanArchitecture.Application.Products.Queries.GetProductsList
 {

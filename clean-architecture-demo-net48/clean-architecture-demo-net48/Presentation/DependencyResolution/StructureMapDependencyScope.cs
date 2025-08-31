@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="StructureMapDependencyScope.cs" company="Web Advanced">
 // Copyright 2012 Web Advanced (www.webadvanced.com)
@@ -16,14 +18,14 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace CleanArchitecture.Presentation.DependencyResolution {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
-    using Microsoft.Practices.ServiceLocation;
+using CommonServiceLocator;
 
-    using StructureMap;
+using StructureMap;
 	
     /// <summary>
     /// The structure map dependency scope.

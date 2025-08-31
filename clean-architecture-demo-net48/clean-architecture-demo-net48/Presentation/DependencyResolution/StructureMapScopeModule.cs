@@ -1,24 +1,28 @@
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+
 namespace CleanArchitecture.Presentation.DependencyResolution {
-    using System.Web;
+    public class StructureMapScopeModule {
+        private readonly RequestDelegate _next;
 
-    using CleanArchitecture.Presentation.App_Start;
-
-    using StructureMap.Web.Pipeline;
-
-    public class StructureMapScopeModule : IHttpModule {
         #region Public Methods and Operators
 
         public void Dispose() {
         }
 
-        public void Init(HttpApplication context) {
-            context.BeginRequest += (sender, e) => StructuremapMvc.StructureMapDependencyScope.CreateNestedContainer();
-            context.EndRequest += (sender, e) => {
-                HttpContextLifecycle.DisposeAndClearAll();
-                StructuremapMvc.StructureMapDependencyScope.DisposeNestedContainer();
-            };
+        public StructureMapScopeModule(RequestDelegate next) {
+            _next = next;
         }
 
+        public async Task InvokeAsync(HttpContext context) {
+            // Here you would create your container scope
+            try {
+                await _next(context);
+            }
+            finally {
+                // Here you would dispose your container scope
+            }
+        }
         #endregion
     }
 }

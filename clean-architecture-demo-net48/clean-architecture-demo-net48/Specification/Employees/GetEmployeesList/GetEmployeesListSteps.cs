@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CleanArchitecture.Application.Employees.Queries.GetEmployeesList;
@@ -7,6 +7,8 @@ using NUnit.Framework;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 using AppContext = CleanArchitecture.Specification.Common.AppContext;
+using NUnit.Framework.Legacy;
+
 
 namespace CleanArchitecture.Specification.Employees.GetEmployeesList
 {
