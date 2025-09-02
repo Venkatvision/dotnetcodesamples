@@ -1,0 +1,95 @@
+trigger: none
+
+variables:
+  resource_group: myapp-rg-$(environment)
+  sql_server_name: myappsql$(environment)
+  aks_cluster_name: sampleakscluster-$(environment)
+  app_name: cleanarch-$(environment)
+
+# parameters:
+#   - name: environment
+#     displayName: Environment
+#     type: string
+#     default: qa
+#     values:
+#       - qa
+#       - uat
+#       - prod
+
+# variables:
+#   - name: environment
+#     value: ${{ parameters.environment }}
+
+- group: dotnet-variable-group
+
+stages:
+- stage: InfrastructureProvisioning
+  displayName: Infrastructure Provisioning
+  jobs:
+  - job: ProvisionResources
+    displayName: Provision Azure Resources
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: self
+    
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: $(azure_rm_conn)
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          set -e
+          
+          echo "Starting infrastructure provisioning..."
+          
+          # 1. Resource Group
+          if az group show --name $(resource_group) &>/dev/null; then
+            echo "Resource group $(resource_group) already exists"
+          else
+            echo "Creating resource group $(resource_group)"
+            az group create --name $(resource_group) --location $(location) --tags environment=$(environment)
+          fi
+          
+          # 2. Azure Container Registry (ACR)
+          if az acr show --name $(acr_name) --resource-group $(acr_rg_name) &>/dev/null; then
+            echo "ACR $(acr_name) already exists"
+          else
+            echo "Creating ACR $(acr_name)"
+            az acr create --name $(acr_name) --resource-group $(acr_rg_name) --sku Basic --location $(location) --tags environment=$(environment)
+            az acr update -n $(acr_name) --admin-enabled true
+          fi
+          
+          # 3. SQL Server
+          if az sql server show --name $(sql_server_name) --resource-group $(resource_group) &>/dev/null; then
+            echo "SQL Server $(sql_server_name) already exists"
+          else
+            echo "Creating SQL Server $(sql_server_name)"
+            az sql server create --name $(sql_server_name) --resource-group $(resource_group) --admin-user $(sql_admin) --admin-password $(sql_pass) --location $(sql_location)
+          fi
+          
+          # Always create firewall rule for Azure services
+          echo "Creating firewall rule for Azure services"
+          az sql server firewall-rule create --resource-group $(resource_group) --server $(sql_server_name) --name AllowAzureServices --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
+          
+          # 4. SQL Database
+          if az sql db show --name $(db_name) --server $(sql_server_name) --resource-group $(resource_group) &>/dev/null; then
+            echo "SQL Database $(db_name) already exists"
+          else
+            echo "Creating SQL Database $(db_name)"
+            az sql db create --name $(db_name) --server $(sql_server_name) --resource-group $(resource_group) --service-objective Basic
+          fi
+          
+          # 5. AKS Cluster
+          if az aks show --name $(aks_cluster_name) --resource-group $(resource_group) &>/dev/null; then
+            echo "AKS cluster $(aks_cluster_name) already exists"
+          else
+            echo "Creating AKS cluster $(aks_cluster_name)"
+            az aks create --name $(aks_cluster_name) --resource-group $(resource_group) --kubernetes-version $(aks_k8s_version) --node-count 2 --node-vm-size Standard_D4ds_v4 --enable-addons monitoring --network-plugin azure --network-policy azure --attach-acr $(acr_name) --generate-ssh-keys
+          fi
+          
+          # 6. Output Variable
+          echo "Fetching SQL Server FQDN"
+          SQL_FQDN=$(az sql server show --name $(sql_server_name) --resource-group $(resource_group) --query fullyQualifiedDomainName -o tsv)
+          echo "SQL Server FQDN: $SQL_FQDN"
+          echo "##vso[task.setvariable variable=sql_fqdn;isOutput=true]$SQL_FQDN"
